@@ -12,7 +12,7 @@ function check_install() {
   the_installcmd="$2"
   if ! command -v $thecmd 2>&1 >/dev/null; then
     echo "installing $thecmd"
-    echo "$the_installcmd"
+    eval "$the_installcmd"
   fi
 }
 check_install "git" "xcode-select --install"
