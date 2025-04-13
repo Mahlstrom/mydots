@@ -1,0 +1,64 @@
+# Interactive shell-specific configurations
+
+# Zsh options
+setopt HIST_FCNTL_LOCK
+unsetopt APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+unsetopt HIST_IGNORE_SPACE
+setopt SHARE_HISTORY
+
+# History settings
+HISTSIZE="10000"
+SAVEHIST="10000"
+HISTFILE="$HOME/.zsh_history"
+mkdir -p "$(dirname "$HISTFILE")"
+
+# Plugins and aliases
+source $HOME/.config/zsh/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_STRATEGY=(history)
+source ~/.config/zsh/alias.sh
+
+# Kodmyran commands
+fpath+=(~/kodmyran/c7dev)
+
+# Initialization scripts (check if commands exist)
+if (( $+commands[starship] )); then
+  eval "$($HOMEBREW_PREFIX/bin/starship init zsh)"
+fi
+
+if (( $+commands[fzf] )); then
+  eval "$($HOMEBREW_PREFIX/bin/fzf --zsh)"
+fi
+
+if (( $+commands[zoxide] )); then
+  eval "$($HOMEBREW_PREFIX/bin/zoxide init zsh)"
+fi
+
+if (( $+commands[direnv] )); then
+  eval "$($HOMEBREW_PREFIX/bin/direnv hook zsh)"
+fi
+
+# kubectl autocompletion
+if (( $+commands[kubectl] )); then
+  source <(kubectl completion zsh)
+fi
+
+# sesh-sessions function
+function sesh-sessions() {
+  local session
+  session=$(sesh list -t -c | fzf --height 40% --reverse --border --border-label ' sesh ' --prompt '⚡  ')
+  [[ -z "$session" ]] && return
+  sesh connect $session
+}
+
+zle -N sesh-sessions
+bindkey -M emacs '\es' sesh-sessions
+bindkey -M vicmd '\es' sesh-sessions
+bindkey -M viins '\es' sesh-sessions
+
+for file in $HOME/.config/*/.zshrc(N); do
+  if [[ -f $file ]]; then
+    source "$file"
+  fi
+done
+

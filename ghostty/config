@@ -1,0 +1,35 @@
+theme = Hipster Green
+# theme = Novel
+
+#
+# https://gist.github.com/renxzen/d9888fc945f4185eb63d91c97d3cfad3
+#
+
+shell-integration = zsh
+shell-integration-features = no-cursor,no-title
+
+# macos specific
+macos-titlebar-style = hidden
+# macos-option-as-alt = true
+macos-window-shadow = false
+macos-non-native-fullscreen = false
+
+background-opacity = 0.4
+background-blur-radius = 20
+
+font-thicken = true
+
+cursor-style = block
+cursor-style-blink = false
+cursor-invert-fg-bg = true
+mouse-hide-while-typing = true
+
+keybind = ctrl+tab=text:\x1b[9;5u
+keybind = ctrl+shift+tab=text:\x1b[1;5Z
+
+keybind = cmd+j=text:\x1bj
+keybind = cmd+k=text:\x1bk
+
+font-family-bold = JetBrains Mono Bold
+font-family-italic= JetBrains Mono Italic
+font-family-bold-italic = JetBrains Mono Bold Italic

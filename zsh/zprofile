@@ -1,0 +1,11 @@
+# Login shell-specific configurations
+# Initialize compinit only once
+autoload -Uz compinit
+compinit -i
+
+for file in $HOME/.config/*/.zprofile(N); do
+  if [[ -f $file ]]; then
+    source "$file"
+  fi
+done
+

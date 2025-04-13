@@ -1,0 +1,21 @@
+# Environment variables
+export MACHINE=$(hostname | rev | cut -d "." -f2- | rev)
+export CLICLOLOR="1"
+export EDITOR="nvim"
+export NVIM_APPNAME="nvim_files/mahlstrom/nvim-newsbs/"
+export NVIM_APPNAME2="nvim_files/mahlstrom/nvim/"
+export PAGER="less"
+
+# Paths
+typeset -U path
+path+=(
+  /usr/local/bin
+  /usr/local/sbin
+  /run/current-system/sw/bin
+  $HOME/.config/composer/vendor/bin
+  /opt/homebrew/opt/mysql-client/bin
+  /Users/mahlstrom/github.com/mahlstrom/argbash
+  ~/kodmyran/c7dev
+)
+export HOMEBREW_BUNDLE_FILE="$HOME/.config/homebrew/Brewfile_$MACHINE"
+
