@@ -38,7 +38,7 @@ function check_dotconfig() {
   fi
 
   # Clone the repository
-  # git clone "$REMOTE_URL" "$CONFIG_DIR"
+  git clone "$REMOTE_URL" "$CONFIG_DIR"
   echo "Cloned repository into $CONFIG_DIR."
 }
 
