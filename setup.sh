@@ -5,6 +5,7 @@ function check_dotconfig() {
   CONFIG_DIR="$HOME/.config"
   REMOTE_URL="https://github.com/Mahlstrom/mydots"
   REMOTE_IDENTIFIER="Mahlstrom/mydots"
+  echo "Checking for $HOME/.config"
 
   # Check if the directory exists
   if [ -d "$CONFIG_DIR" ]; then
