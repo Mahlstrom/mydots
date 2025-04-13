@@ -50,6 +50,7 @@ function checksymlink() {
     echo "$path is correctly symlinkedd"
   else
     echo "$path is not correct. Now: \"$(readlink -- "$path")\" Wanted: \"$target\""
+    ln -s "$target" "$path"
   fi
 }
 function check_install() {
@@ -68,6 +69,10 @@ check_install "brew" '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.c
 pushd "$HOME/.config" || exit
 check_install "gum" " brew install gum"
 check_install "ghostty" "brew install --cask ghostty"
+checksymlink "$HOME/.zshrc" "$HOME/.config/zsh/zshrc"
+checksymlink "$HOME/.zshenv" "$HOME/.config/zsh/zshenv"
+checksymlink "$HOME/.zprofile" "$HOME/.config/zsh/zprofile"
+
 # checksymlink "$HOME/.config/nvim_files" "$HOME/github.com"
 # git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
