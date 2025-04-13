@@ -44,14 +44,15 @@ function check_dotconfig() {
 }
 
 function checksymlink() {
-  local path="$1"
+  local ln_path="$1"
   local target="$2"
   echo $SHELL
-  if [ "$(readlink -- "$path")" = "$target" ]; then
-    echo "$path is correctly symlinkedd"
+  echo "checking if $ln_path is a symlink to $target"
+  if [ "$ln_path" -ef "$target" ]; then
+    echo "$ln_path is correctly symlinked"
   else
     echo "$path is not correct. Now: \"$(readlink -- "$path")\" Wanted: \"$target\""
-    ln -s "$target" "$path"
+    ln -s "$target" "$ln_path"
   fi
 }
 function check_install() {
@@ -64,7 +65,7 @@ function check_install() {
 }
 check_install "git" "xcode-select --install"
 
-check_dotconfig
+# check_dotconfig
 source "$HOME/.config/homebrew/.zshenv"
 check_install "brew" '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
 pushd "$HOME/.config" || exit
