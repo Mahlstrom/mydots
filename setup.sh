@@ -17,12 +17,11 @@ function check_dotconfig() {
         echo "$CONFIG_DIR is already a valid git repository."
         pushd "$CONFIG_DIR" || exit
         if [[ $(git status --porcelain) ]]; then
-          git pull --ff-only
-        else
           echo "You have changes in your dotfiles directory"
+        else
+          git pull --ff-only
         fi
         popd || exit
-        exit 0
       else
         # Rename the directory with current date and time
         TIMESTAMP=$(date +"%Y-%m-%d_%H:%M:%S")
@@ -37,9 +36,11 @@ function check_dotconfig() {
     fi
   fi
 
-  # Clone the repository
-  git clone "$REMOTE_URL" "$CONFIG_DIR"
-  echo "Cloned repository into $CONFIG_DIR."
+  if [ -d "$CONFIG_DIR" ]; then
+    # Clone the repository
+    git clone "$REMOTE_URL" "$CONFIG_DIR"
+    echo "Cloned repository into $CONFIG_DIR."
+  fi
 }
 
 function checksymlink() {
