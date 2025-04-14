@@ -28,3 +28,7 @@ karabiner/automatic_backups
 bat/syntaxes
 /karabiner/*.php
 /karabiner/*.json
+
+# Temporary things
+/zsh_*
+/etczsh
