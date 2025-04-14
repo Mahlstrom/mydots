@@ -18,4 +18,10 @@ path+=(
   ~/kodmyran/c7dev
 )
 export HOMEBREW_BUNDLE_FILE="$HOME/.config/homebrew/Brewfile_$MACHINE"
+for file in $HOME/.config/*/.zshenv(N); do
+  if [[ -f $file ]]; then
+    source "$file"
+  fi
+done
+
 
