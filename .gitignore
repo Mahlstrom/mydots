@@ -1,34 +1,42 @@
 /.idea
-/GitHub
-/gh/hosts.yml
+/configstore/update-notifier-npm.json
+
+# For security
+# /GitHub
+/bat/syntaxes
 /github-copilot
-/iterm2/AppSupport
-/neofetch
-/nix/.gat
-/nix/result
-/nvim/lazy-lock.json
-/nvim_files
-/op
-/raycast
-/shit
-/spotify-tui
+/lazysql/config.toml
+# /neofetch
+/nvim*/**
+# /raycast
+# /shit
+# /spotify-tui
+# /tmux/mine
 /tmux/plugins
-/yazi/plugins
-configstore/update-notifier-npm.json
-.DS_Store
+# /yazi/plugins
+
+
+# For privacy
+/1Password
+/gh/hosts.yml
+/glab-cli
+
+# Testing
+/bin
+/karabiner
+/op
+goodsettings.sh
+
+# Temporary things
+/zsh_*
+/etczsh
+
 /tmux/themes
+/tmux/mine
 /tmux/demo2
 /tmux/_before_clean
 /tmux/down
 /tmux/now
 /tmux/old_*
-lazysql/config.toml
-tmux/mine
-karabiner/automatic_backups
-bat/syntaxes
-/karabiner/*.php
-/karabiner/*.json
+/tmux-extra
 
-# Temporary things
-/zsh_*
-/etczsh

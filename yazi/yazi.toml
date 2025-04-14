@@ -1,0 +1,9 @@
+[preview]
+tab_size = 4
+max_width = 1000
+max_height = 1000
+
+[[manager.prepend_keymap]]
+on = "T"
+run = "plugin --sync max-preview"
+desc = "Maximize or restore preview"
