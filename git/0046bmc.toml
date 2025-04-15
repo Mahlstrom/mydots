@@ -1,0 +1,6 @@
+[core]
+	sshCommand = "ssh -i ~/.config/ssh_pub/github_bma.pub"
+
+[user]
+	email = "<>"
+	name = "0046bmc"

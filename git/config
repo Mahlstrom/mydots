@@ -1,0 +1,36 @@
+[user]
+	email = "<>"
+	name = "Mahlstrom"
+
+[core]
+	sshCommand = "ssh -i ~/.config/ssh_pub/github_home.pub"
+
+[init]
+	defaultBranch = main
+[push]
+  autoSetupRemote = true
+[merge]
+  tool = phpstorm
+
+[diff]
+  tool = phpstorm
+
+[difftool]
+  prompt = false
+
+[difftool "phpstorm"]
+; Putting this path here doesn't work. I would love to know why.
+;	path = /Applications/PHPStorm.app/Contents/MacOS
+	cmd = phpstorm diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
+	trustExitCode = true
+[mergetool "phpstorm"]
+	cmd = phpstorm merge $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE") $(cd $(dirname "$BASE") && pwd)/$(basename "$BASE") $(cd $(dirname "$MERGED") && pwd)/$(basename "$MERGED")
+	trustExitCode = true
+
+[includeIf "hasconfig:remote.*.url:git@github.com:Mahlstrom/**"]
+	path = "$HOME/.config/git/mahlstrom.toml"
+
+[includeIf "hasconfig:remote.*.url:git@github.com:0046bmc/**"]
+	path = "$HOME/.config/git/0046bmc.toml"
+
+# vim: set ft=dosini :
