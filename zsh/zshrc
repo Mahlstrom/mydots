@@ -38,6 +38,8 @@ if (( $+commands[direnv] )); then
   eval "$($HOMEBREW_PREFIX/bin/direnv hook zsh)"
 fi
 
+bindkey -e
+
 # kubectl autocompletion
 if (( $+commands[kubectl] )); then
   source <(kubectl completion zsh)

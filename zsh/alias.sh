@@ -25,3 +25,6 @@ alias -- s='sesh connect "$(sesh list -i |gum filter --limit 1 --placeholder '\'
 alias -- sb='cd ~/Documents/doc/'
 alias -- v=nvim
 alias -- vv='NVIM_APPNAME=$NVIM_APPNAME2 nvim'
+
+alias -- c7='cd $HOME/kodmyran/commerce7'
+alias -- work='cd $HOME/kodmyran'

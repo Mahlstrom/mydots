@@ -1,0 +1,77 @@
+#!/usr/bin/env zsh
+
+# ██╗   ██╗██████╗ ██████╗  █████╗ ████████╗███████╗
+# ██║   ██║██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔════╝
+# ██║   ██║██████╔╝██║  ██║███████║   ██║   █████╗  
+# ██║   ██║██╔═══╝ ██║  ██║██╔══██║   ██║   ██╔══╝  
+# ╚██████╔╝██║     ██████╔╝██║  ██║   ██║   ███████╗
+#  ╚═════╝ ╚═╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝
+#  A script to update all the things
+#  Ripped from Josh Medeski (https://github.com/joshmedeski/dotfiles)
+#  and rewritten
+OLD_SESSNAME="$(tmux display-message -p '#S')"
+tmux rename-session -t "$OLD_SESSNAME" "🌎 updating"
+
+# Function to log updates
+log_update() {
+    local title="$1"
+    local command="$2"
+    gum spin --spinner globe --title "${title}ing" --show-output -- /usr/bin/env zsh -c "$command >>/tmp/u-$NOW.txt 2>&1" && {
+      cmdmsg="✅ ${title}ed"
+    } || {
+      cmdmsg="⚠️ ${title}ing failed"
+    }
+    echo "\n" >>/tmp/u-$NOW.txt
+    echo $cmdmsg;
+}
+
+# Function to handle brew updates
+brew_update() {
+    log_update "🍻 brew updat" "HOMEBREW_COLOR=1 brew update"
+
+    OUTDATED=$(brew outdated)
+
+    if [ ! -z "${OUTDATED}" ]; then
+        gum spin --spinner globe --title "🍻 brew upgrading" --show-output -- arch -arm64 brew upgrade >>/tmp/u-$NOW.txt 2>&1 && {
+      cmdmsg="✅ 🍻 brew upgraded"
+    } || {
+      cmdmsg="⚠️ 🍻 brew upgrading failed"
+    }
+    echo "\n" >>/tmp/u-$NOW.txt
+    echo $cmdmsg;
+
+        log_update "🍻 brew cleaning up" "HOMEBREW_COLOR=1 brew cleanup --prune=all"
+    else
+        echo "No outdated brew packages" >>/tmp/u-$NOW.txt
+    fi
+
+    log_update "🍻 brew doctor" "HOMEBREW_COLOR=1 brew doctor"
+}
+
+# Display header
+gum style \
+    --foreground 12 --border-foreground 12 --border double \
+    --align center --width 60 --margin "1 0" --padding "1 0" \
+    '██╗   ██╗██████╗ ██████╗  █████╗ ████████╗███████╗
+██║   ██║██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔════╝
+██║   ██║██████╔╝██║  ██║███████║   ██║   █████╗  
+██║   ██║██╔═══╝ ██║  ██║██╔══██║   ██║   ██╔══╝  
+╚██████╔╝██║     ██████╔╝██║  ██║   ██║   ███████╗
+ ╚═════╝ ╚═╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝'
+
+NOW=$(date +"%Y-%m-%d-%H-%M-%S")
+echo -e "$NOW\n" >>/tmp/u-$NOW.txt
+
+# Updates
+log_update "📣 Echo" "echo 'blutti' 'gnu'"
+log_update "🐙 gh extensions upgrad" "gh extension upgrade --all"
+log_update "🪟 tpm plugins updat" "~/.config/tmux/plugins/tpm/bin/update_plugins all"
+log_update "💤 lazy.nvim sync" "nvim --headless '+Lazy! sync' +qa"
+log_update "🌳 nvim-treesitter updat" "nvim --headless -c TSUpdate +qa"
+brew_update
+log_update "🍎 mas upgrad" "mas upgrade"
+
+echo "✅ 🧾 logged to /tmp/u-$NOW.txt"
+bat /tmp/u-$NOW.txt
+
+tmux rename-session -t "$(tmux display-message -p '#S')" "$OLD_SESSNAME"
