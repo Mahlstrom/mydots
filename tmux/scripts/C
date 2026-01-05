@@ -1,0 +1,8 @@
+#!/bin/bash
+TXT=$3
+case $TXT in
+_MUSIC_)
+	TXT=$(~/.config/tmux/scripts/music.sh)
+	;;
+esac
+echo -n "#[fg=#887000, bg=colour237]#[fg=colour223, bg=#887000] ${TXT}#[fg=colour237, bg=#887000] "

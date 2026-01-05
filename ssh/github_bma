@@ -1,0 +1,5 @@
+Host github.com-bma
+    HostName github.com
+    IdentitiesOnly yes
+    User git
+    IdentityFile ~/.config/ssh_pub/github_bma.pub

@@ -1,0 +1,5 @@
+Host pve2
+    Hostname 192.168.1.9
+    User root
+
+

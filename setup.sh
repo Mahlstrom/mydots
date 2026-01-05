@@ -108,8 +108,12 @@ check_install "ghostty" "brew install --cask ghostty"
 checksymlink "$HOME/.zshrc" "$HOME/.config/zsh/zshrc"
 checksymlink "$HOME/.zshenv" "$HOME/.config/zsh/zshenv"
 checksymlink "$HOME/.zprofile" "$HOME/.config/zsh/zprofile"
+checksymlink "$HOME/.zprofile" "$HOME/.config/zsh/zprofile"
+checksymlink "$HOME/.ideavimrc" "$HOME/.config/ideavim/ideavimrc"
 
 # checksymlink "$HOME/.config/nvim_files" "$HOME/github.com"
+#
 # git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
+source */init.sh
 popd || exit

@@ -1,0 +1,85 @@
+#
+# ███████╗███████╗███████╗██╗  ██╗     ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗ 
+# ██╔════╝██╔════╝██╔════╝██║  ██║    ██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝ 
+# ███████╗█████╗  ███████╗███████║    ██║     ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗
+# ╚════██║██╔══╝  ╚════██║██╔══██║    ██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║
+# ███████║███████╗███████║██║  ██║    ╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝
+# ╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝     ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝ 
+#
+# Smart session manager for the terminal
+# https://github.com/joshmedeski/sesh
+
+blacklist = ["scratch"]
+
+[default_session]
+startup_command = "nvim +GoToFile"
+startup_command_ignore_dirs = ["~/repos", "~/.config"]
+preview_command = "eza --all --git --icons --color=always {}"
+
+[[session]]
+name = "Dotfiles 🔥"
+path = "~/.config"
+startup_command = "nvim"
+
+[[session]]
+name = "Provisioning"
+path = "~/github.com/mahlstrom/provisioning"
+startup_command = "nvim"
+
+[[session]]
+name = "Second brain 🧠"
+path = "~/Documents/doc"
+startup_command = "nvim"
+
+[[session]]
+name = "CRK 🐘"
+path = "~/github.com/mahlstrom/crk"
+startup_command = "nvim"
+
+[[session]]
+name = "Diabetes 🐘"
+path = "~/github.com/mahlstrom/diabetes"
+
+[[session]]
+name = "Bills 🏦"
+path = "~/github.com/mahlstrom/bills"
+startup_command = "nvim"
+
+[[session]]
+name = "Php-bin 🐘"
+path = "~/github.com/mahlstrom/php-bin"
+startup_command = "nvim"
+
+[[session]]
+name = "L-Php-bin 🐘"
+path = "~/github.com/mahlstrom/php-bin-laravel"
+startup_command = "nvim"
+
+[[session]]
+name = "My CV 🐘"
+path = "~/github.com/mahlstrom/mycv"
+startup_command = "nvim"
+
+[[session]]
+name = "Themes 🐘"
+path = "~/github.com/mahlstrom/themes"
+startup_command = "nvim"
+
+[[session]]
+name = "Aroundnow 🐘"
+path = "~/github.com/mahlstrom/aroundnow"
+startup_command = "nvim"
+
+[[session]]
+name = "NVim "
+path = "~/github.com/mahlstrom/nvim"
+startup_command = "nvim"
+
+[[session]]
+name = "Work 🐘"
+path = "~/kodmyran"
+
+[[session]]
+name = "Josh dotfiles"
+path = "~/github.com/joshmedeski/dotfiles"
+startup_command = "nvim"

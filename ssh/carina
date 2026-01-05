@@ -1,0 +1,5 @@
+Host carina
+    Hostname 192.168.10.64
+    User mahlstrom
+    IdentityAgent ~/.1password/agent.sock
+    IdentityFile none

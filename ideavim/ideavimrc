@@ -5,7 +5,7 @@
 
 " LazyVim default settings
 " https://www.lazyvim.org/configuration/general
-
+nnoremap <SPACE> <Nop>
 let mapleader=" "
 let maplocalleader="\\"
 
@@ -404,13 +404,13 @@ nmap <leader>uI <Action>(ActivateStructureToolWindow)
 " LazyVim Changelog
 nmap <leader>L <Action>(Vcs.Show.Log)
 " Terminal (Root Dir)
-nmap <leader>ft <Action>(ActivateTerminalToolWindow)
+" nmap <leader>ft <Action>(ActivateTerminalToolWindow)
 " Terminal (cwd)
-nmap <leader>fT <Action>(ActivateTerminalToolWindow)
+" nmap <leader>fT <Action>(ActivateTerminalToolWindow)
 " Terminal (Root Dir)
 " nmap <C-/><C-w> <Action>(ActivateTerminalToolWindow)
 " Hide Terminal
-nmap <C-_> <Action>(ActivateTerminalToolWindow)
+" nmap <C-_> <Action>(ActivateTerminalToolWindow)
 " Split Window Below.  :split<cr> doesn't work.
 nmap <leader>- <c-w>s
 " Split Window Right

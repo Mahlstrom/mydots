@@ -155,15 +155,15 @@ alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 alt-shift-semicolon = 'mode service'
 
 [workspace-to-monitor-force-assignment]
-1 = ['D27QO', 3, 2, '^built-in retina display$']
-2 = ['D27QO', 3, 2, '^built-in retina display$']
-3 = ['D27QO', 3, 2, '^built-in retina display$']
-4 = ['D27QO', 3, 2, '^built-in retina display$']
+1 = ['DELL U2515H', 'D27QO', 3, 2, '^built-in retina display$']
+2 = ['DELL U2515H', 'D27QO', 3, 2, '^built-in retina display$']
+3 = ['DELL U2515H', 'D27QO', 3, 2, '^built-in retina display$']
+4 = ['DELL U2515H', 'D27QO', 3, 2, '^built-in retina display$']
 5 = ['^built-in retina display$']
 6 = ['^built-in retina display$']
-7 = ['S34CG50', 2, '^built-in retina display$']
-8 = ['S34CG50', 2, '^built-in retina display$']
-9 = ['S34CG50', 2, '^built-in retina display$']
+7 = ['DELL U2515H', 'S34CG50', 2, '^built-in retina display$']
+8 = ['DELL U2515H', 'S34CG50', 2, '^built-in retina display$']
+9 = ['DELL U2515H', 'S34CG50', 2, '^built-in retina display$']
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
@@ -195,6 +195,10 @@ run = ['layout floating']
 [[on-window-detected]]
 if.app-name-regex-substring = "^PhpStorm"
 run = ['layout floating', 'move-node-to-workspace 8']
+
+[[on-window-detected]]
+if.app-name-regex-substring = "^Cookie Run"
+run = ['layout floating', 'move-node-to-workspace 9']
 
 [[on-window-detected]]
 if.app-name-regex-substring = "^Microsoft Teams"

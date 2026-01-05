@@ -1,0 +1,6 @@
+/Users/mahlstrom/.config/tmux/tmux.conf:1: No such file or directory: /opt/homebrew/etc/tmux.conf,/Users/mahlstrom/.tmux.conf,/Users/mahlstrom/.config/tmux/themebox/default.conf                                          [0/0]
+/Users/mahlstrom/.config/tmux/tmux.conf:2: No such file or directory: /opt/homebrew/etc/tmux.conf,/Users/mahlstrom/.tmux.conf,/Users/mahlstrom/.config/tmux/themebox/defaultw.conf
+/Users/mahlstrom/.config/tmux/tmux.conf:5: No such file or directory: /opt/homebrew/etc/tmux.conf,/Users/mahlstrom/.tmux.conf,/Users/mahlstrom/.config/tmux/tmux_sesh.conf
+/Users/mahlstrom/.config/tmux/tmux.conf:7: No such file or directory: /opt/homebrew/etc/tmux.conf,/Users/mahlstrom/.tmux.conf,/Users/mahlstrom/.config/tmux/tmux.keyboard.conf
+/Users/mahlstrom/.config/tmux/tmux.conf:8: No such file or directory: /opt/homebrew/etc/tmux.conf,/Users/mahlstrom/.tmux.conf,/Users/mahlstrom/.config/tmux/tmux.settings.conf
+/Users/mahlstrom/.config/tmux/tmux.conf:20: No such file or directory: /opt/homebrew/etc/tmux.conf,/Users/mahlstrom/.tmux.conf,/Users/mahlstrom/.config/tmux/tmux.theme.catppuccin2.conf

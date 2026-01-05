@@ -1,0 +1,11 @@
+# .bash_profile - Bash Login Shell Configuration
+
+# Source bashrc for interactive features
+if [ -f "$HOME/.config/bash/bashrc" ]; then
+    source "$HOME/.config/bash/bashrc"
+fi
+
+# Recursive loading of .bash_profile (mirroring Zsh logic for zshenv)
+for file in "$HOME"/.config/*/.bash_profile; do
+    [ -f "$file" ] && source "$file"
+done

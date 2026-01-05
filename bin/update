@@ -26,19 +26,19 @@ log_update() {
 }
 
 # Function to handle brew updates
-brew_update() {
+brew_update()  {
     log_update "🍻 brew updat" "HOMEBREW_COLOR=1 brew update"
 
     OUTDATED=$(brew outdated)
 
     if [ ! -z "${OUTDATED}" ]; then
-        gum spin --spinner globe --title "🍻 brew upgrading" --show-output -- arch -arm64 brew upgrade >>/tmp/u-$NOW.txt 2>&1 && {
+      gum spin --spinner globe --title "🍻 brew upgrading" --show-output -- arch -arm64 brew upgrade >>/tmp/u-$NOW.txt 2>&1 && {
       cmdmsg="✅ 🍻 brew upgraded"
-    } || {
-      cmdmsg="⚠️ 🍻 brew upgrading failed"
-    }
-    echo "\n" >>/tmp/u-$NOW.txt
-    echo $cmdmsg;
+      } || {
+        cmdmsg="⚠️ 🍻 brew upgrading failed"
+      }
+      echo "\n" >>/tmp/u-$NOW.txt
+      echo $cmdmsg;
 
         log_update "🍻 brew cleaning up" "HOMEBREW_COLOR=1 brew cleanup --prune=all"
     else
@@ -63,7 +63,6 @@ NOW=$(date +"%Y-%m-%d-%H-%M-%S")
 echo -e "$NOW\n" >>/tmp/u-$NOW.txt
 
 # Updates
-log_update "📣 Echo" "echo 'blutti' 'gnu'"
 log_update "🐙 gh extensions upgrad" "gh extension upgrade --all"
 log_update "🪟 tpm plugins updat" "~/.config/tmux/plugins/tpm/bin/update_plugins all"
 log_update "💤 lazy.nvim sync" "nvim --headless '+Lazy! sync' +qa"

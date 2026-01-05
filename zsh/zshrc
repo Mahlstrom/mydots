@@ -1,3 +1,6 @@
+echo '-----------------------------------'
+echo $PATH | tr ':' '\n';
+echo '-----------------------------------'
 # Interactive shell-specific configurations
 
 # Zsh options
@@ -16,10 +19,6 @@ mkdir -p "$(dirname "$HISTFILE")"
 # Plugins and aliases
 source $HOME/.config/zsh/zsh-autosuggestions.zsh
 ZSH_AUTOSUGGEST_STRATEGY=(history)
-source ~/.config/zsh/alias.sh
-
-# Kodmyran commands
-fpath+=(~/kodmyran/c7dev)
 
 # Initialization scripts (check if commands exist)
 if (( $+commands[starship] )); then
@@ -63,4 +62,11 @@ for file in $HOME/.config/*/.zshrc(N); do
     source "$file"
   fi
 done
+
+for file in $HOME/github.com/mahlstrom/*/bin/.zshrc(N); do
+  if [[ -f $file ]]; then
+    source "$file"
+  fi
+done
+source ~/.config/zsh/alias.sh
 

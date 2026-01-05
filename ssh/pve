@@ -1,0 +1,7 @@
+Host luna
+    Hostname 192.168.1.2
+    User root
+
+Host pve
+    Hostname 192.168.1.2
+    User root

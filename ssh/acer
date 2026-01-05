@@ -1,0 +1,5 @@
+Host acer
+    Hostname 192.168.1.3
+    User mahlstrom
+    IdentityFile ~/.ssh/id_newkey.pub
+

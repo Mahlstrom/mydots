@@ -1,0 +1,5 @@
+Host mbp13
+    Hostname 192.168.1.62
+    User mahlstrom
+    IdentityFile ~/.ssh/id_newkey.pub
+    IdentitiesOnly yes

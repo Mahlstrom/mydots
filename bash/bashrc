@@ -1,0 +1,85 @@
+# bashrc - Bash Interactive Shell Configuration
+
+# Environment Variables (from zshenv)
+export CLICOLOR="1"
+export EDITOR="nvim"
+export NVIM_APPNAME="nvim_files/mahlstrom/nvim-newsbs/"
+export NVIM_APPNAME2="nvim_files/mahlstrom/nvim/"
+export PAGER="less"
+
+# Path Setup
+_add_to_path() {
+    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+        export PATH="$1:$PATH"
+    fi
+}
+
+_add_to_path "/usr/local/sbin"
+_add_to_path "/usr/local/bin"
+_add_to_path "/Applications/PhpStorm.app/Contents/MacOS"
+_add_to_path "/Users/mahlstrom/github.com/mahlstrom/argbash"
+_add_to_path "/opt/homebrew/opt/mysql-client/bin"
+_add_to_path "$HOME/github.com/mahlstrom/php-bin/bin"
+_add_to_path "$HOME/.config/composer/vendor/bin"
+_add_to_path "/opt/homebrew/sbin"
+_add_to_path "/opt/homebrew/bin"
+
+# Homebrew Bundle
+export HOMEBREW_BUNDLE_FILE="$HOME/.config/homebrew/Brewfile_$MACHINE"
+
+# History Settings
+HISTSIZE=10000
+HISTFILESIZE=10000
+HISTCONTROL=ignoredups:erasedups
+HISTFILE="$HOME/.bash_history"
+shopt -s histappend
+
+# Tool Initializations
+if command -v starship >/dev/null 2>&1; then
+    eval "$(starship init bash)"
+fi
+
+if command -v fzf >/dev/null 2>&1; then
+    eval "$(fzf --bash)"
+fi
+
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init bash)"
+fi
+
+if command -v direnv >/dev/null 2>&1; then
+    eval "$(direnv hook bash)"
+fi
+
+# kubectl completion
+if command -v kubectl >/dev/null 2>&1; then
+    source <(kubectl completion bash)
+fi
+
+# sesh-sessions function
+sesh-sessions() {
+    local session
+    session=$(sesh list -t -c | fzf --height 40% --reverse --border --border-label ' sesh ' --prompt '⚡  ')
+    [[ -z "$session" ]] && return
+    sesh connect "$session"
+}
+
+# Keybinding for sesh-sessions (Alt-s)
+# Note: Bash uses readline for bindings. '\es' corresponds to Alt-s (Escape-s)
+bind -x '"\es": sesh-sessions'
+
+# Aliases
+if [ -f "$HOME/.config/zsh/alias.sh" ]; then
+    source "$HOME/.config/zsh/alias.sh"
+fi
+
+# Recursive loading (mirroring Zsh logic)
+# Load .bashrc from subdirectories in ~/.config
+for file in "$HOME"/.config/*/.bashrc; do
+    [ -f "$file" ] && source "$file"
+done
+
+# Load .bashrc from github.com/mahlstrom/*/bin/
+for file in "$HOME"/github.com/mahlstrom/*/bin/.bashrc; do
+    [ -f "$file" ] && source "$file"
+done
