@@ -1,0 +1,3 @@
+Host git.lab.ufly.se
+  HostName gitssh.lab.ufly.se
+  User git
