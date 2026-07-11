@@ -1,7 +1,3 @@
-echo '==================================='
-echo $PATH | tr ':' '\n';
-echo '==================================='
-
 if [[ -z "$ZSHENV_LOADED" ]]; then
     # Environment variables
   export ZSHENV_LOADED=1
@@ -33,6 +29,4 @@ if [[ -z "$ZSHENV_LOADED" ]]; then
       source "$file"
     fi
   done
-else  
-  echo "zshenv already loaded"
 fi
