@@ -22,6 +22,11 @@ path = "~/.config"
 startup_command = "nvim"
 
 [[session]]
+name = "Strudel ♫ "
+path = "~/github.com/mahlstrom/strudel"
+startup_command = "nvim"
+
+[[session]]
 name = "Provisioning"
 path = "~/github.com/mahlstrom/provisioning"
 startup_command = "nvim"
