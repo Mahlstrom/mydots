@@ -201,3 +201,15 @@ format = '\[[$symbol($version)]($style)\]'
 [solidity]
 format = '\[[$symbol($version)]($style)\]'
 
+[custom.brew_outdated]
+command = '''
+count=$(cat ~/.brew_outdated_count 2>/dev/null || echo "0")
+if [ "$count" -eq 0 ]; then
+    echo -e "\033[32m${count}\033[0m" # Grön text
+else
+    echo -e "\033[33m${count}\033[0m" # Gul text
+fi
+'''
+when = "test -f ~/.brew_outdated_count"
+format = "$symbol$output " # Fixat: Inga hakparenteser eller lösa tecken
+symbol = "🍺 "
