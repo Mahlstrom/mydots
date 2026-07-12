@@ -19,7 +19,8 @@ echo $model_description
 case "$model_name" in
 *"MacBook Pro"*) type_prefix="mbp" ;;
 *"MacBook Air"*) type_prefix="mba" ;;
-*"Mac Mini"*) type_prefix="mm" ;;
+*"Mac Mini"*) type_prefix="mini" ;;
+*"Mac mini"*) type_prefix="mini" ;;
 *"iMac"*) type_prefix="im" ;;
 *"Mac Studio"*) type_prefix="ms" ;;
 *"Mac Pro"*) type_prefix="mp" ;;
