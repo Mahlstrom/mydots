@@ -1,0 +1,86 @@
+#!/bin/bash
+
+echo "============================================="
+echo "        macOS Hostname Generator             "
+echo "============================================="
+
+# 1. Gather System Information
+hardware_info=$(system_profiler SPHardwareDataType)
+
+model_name=$(echo "$hardware_info" | grep "Model Name" | cut -d: -f2 | xargs)
+model_identifier=$(echo "$hardware_info" | grep "Model Identifier" | cut -d: -f2 | xargs)
+processor_info=$(echo "$hardware_info" | grep -E "Processor Name|Chip" | head -n 1 | cut -d: -f2 | xargs)
+model_description=$(curl -s "https://raw.githubusercontent.com/kyle-seongwoo-jun/apple-device-identifiers/refs/heads/main/mac-device-identifiers-unique.json" | jq -r '."'$model_identifier'"')
+echo $model_name
+echo $processor_info
+echo $model_identifier
+echo $model_description
+# 2. Determine Machine Type Prefix
+case "$model_name" in
+*"MacBook Pro"*) type_prefix="mbp" ;;
+*"MacBook Air"*) type_prefix="mba" ;;
+*"Mac Mini"*) type_prefix="mm" ;;
+*"iMac"*) type_prefix="im" ;;
+*"Mac Studio"*) type_prefix="ms" ;;
+*"Mac Pro"*) type_prefix="mp" ;;
+*) type_prefix="mac" ;;
+esac
+
+# 3. Clean up the CPU info
+# Convert to lowercase and compress spaces
+cpu_clean=$(echo "$processor_info" | tr '[:upper:]' '[:lower:]' | tr -d ' ')
+
+if [[ "$cpu_clean" == *"apple"* ]]; then
+  # For Apple Silicon: extract "m4pro", "m4", "m1max", etc.
+  cpu_short=$(echo "$cpu_clean" | sed 's/apple//g')
+elif [[ "$cpu_clean" == *"intel"* ]]; then
+  # For Intel: check if it's an i5, i7, i9, etc.
+  if [[ "$cpu_clean" == *"core(tm)"* ]]; then
+    cpu_short=$(echo "$cpu_clean" | sed -n 's/.*i\([0-9]\).*/i\1/p')
+  else
+    cpu_short=$(echo "$cpu_clean" | grep -o 'i[3579]')
+  fi
+  # Fallback if parsing fails
+  [ -z "$cpu_short" ] && cpu_short="intel"
+else
+  cpu_short="cpu"
+fi
+
+# 4. Extract the Year
+# Older Intel Macs state the year in the Model Name. Newer Apple Silicon Macs do not.
+# We pull the year from the model name first; if missing, we ask the user.
+year_match=$(echo "$model_description" | grep -oE '20[0-9]{2}')
+
+if [ -n "$year_match" ]; then
+  year_short=$(echo "$year_match" | cut -c 3-4)
+else
+  echo "Hardware Profile: $model_name ($processor_info)"
+  echo -n "Could not auto-detect the release year. Enter 2-digit year (e.g., 24): "
+  read -r year_short
+  # Strip any accidents down to 2 digits
+  year_short=$(echo "$year_short" | grep -oE '[0-9]{2}' | tail -n 1)
+fi
+
+# 5. Formulate Suggestions
+suggested_hostname="${type_prefix}-${cpu_short}-${year_short}"
+suggested_computername="${model_name} (${cpu_short} ${year_short})"
+
+echo "---------------------------------------------"
+echo "Detected Hardware: $model_name | $processor_info | $model_identifier | $model_description"
+echo "Suggested Hostname:       $suggested_hostname"
+echo "Suggested Computer Name:  $suggested_computername"
+echo "============================================="
+
+# 6. Prompt to Apply Changes
+echo -n "Do you want to apply these names now? (y/N): "
+read -r response
+#
+if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+  echo "Applying system changes (requires sudo password)..."
+  sudo scutil --set HostName "$suggested_hostname"
+  sudo scutil --set LocalHostName "$suggested_hostname"
+  sudo scutil --set ComputerName "$suggested_computername"
+  echo "Successfully updated! Restart your terminal to see changes."
+else
+  echo "Changes aborted."
+fi
