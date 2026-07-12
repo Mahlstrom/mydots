@@ -1,6 +1,6 @@
 # bashrc - Bash Interactive Shell Configuration
 
-# Environment Variables (from zshenv)
+# Environment Variables
 export CLICOLOR="1"
 export EDITOR="nvim"
 export NVIM_APPNAME="nvim_files/mahlstrom/nvim-newsbs/"
@@ -8,21 +8,7 @@ export NVIM_APPNAME2="nvim_files/mahlstrom/nvim/"
 export PAGER="less"
 
 # Path Setup
-_add_to_path() {
-    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
-        export PATH="$1:$PATH"
-    fi
-}
-
-_add_to_path "/usr/local/sbin"
-_add_to_path "/usr/local/bin"
-_add_to_path "/Applications/PhpStorm.app/Contents/MacOS"
-_add_to_path "/Users/mahlstrom/github.com/mahlstrom/argbash"
-_add_to_path "/opt/homebrew/opt/mysql-client/bin"
-_add_to_path "$HOME/github.com/mahlstrom/php-bin/bin"
-_add_to_path "$HOME/.config/composer/vendor/bin"
-_add_to_path "/opt/homebrew/sbin"
-_add_to_path "/opt/homebrew/bin"
+[[ -f "$HOME/.config/common/path.sh" ]] && source "$HOME/.config/common/path.sh"
 
 # Homebrew Bundle
 export HOMEBREW_BUNDLE_FILE="$HOME/.config/homebrew/Brewfile_$MACHINE"
@@ -34,49 +20,16 @@ HISTCONTROL=ignoredups:erasedups
 HISTFILE="$HOME/.bash_history"
 shopt -s histappend
 
-# Tool Initializations
-if command -v starship >/dev/null 2>&1; then
-    eval "$(starship init bash)"
-fi
-
-if command -v fzf >/dev/null 2>&1; then
-    eval "$(fzf --bash)"
-fi
-
-if command -v zoxide >/dev/null 2>&1; then
-    eval "$(zoxide init bash)"
-fi
-
-if command -v direnv >/dev/null 2>&1; then
-    eval "$(direnv hook bash)"
-fi
-
-# kubectl completion
-if command -v kubectl >/dev/null 2>&1; then
-    source <(kubectl completion bash)
-fi
-
-# sesh-sessions function
-sesh-sessions() {
-    local session
-    session=$(sesh list -t -c | fzf --height 40% --reverse --border --border-label ' sesh ' --prompt '⚡  ')
-    [[ -z "$session" ]] && return
-    sesh connect "$session"
-}
-
-# Keybinding for sesh-sessions (Alt-s)
-# Note: Bash uses readline for bindings. '\es' corresponds to Alt-s (Escape-s)
-bind -x '"\es": sesh-sessions'
-
-# Aliases
-if [ -f "$HOME/.config/zsh/alias.sh" ]; then
-    source "$HOME/.config/zsh/alias.sh"
-fi
-
-# Recursive loading (mirroring Zsh logic)
-# Load .bashrc from subdirectories in ~/.config
-for file in "$HOME"/.config/*/.bashrc; do
-    [ -f "$file" ] && source "$file"
+# Load tool-specific configs
+for dir in "$HOME"/.config/*/; do
+    dir=${dir%/}
+    tool_name=$(basename "$dir")
+    # Only load if the tool exists (or if it's a generic config folder)
+    if [[ "$tool_name" == "zsh" || "$tool_name" == "bash" || "$tool_name" == "common" ]] || command -v "$tool_name" >/dev/null 2>&1; then
+        [ -f "$dir/.bashrc" ] && source "$dir/.bashrc"
+        [ -f "$dir/alias.sh" ] && source "$dir/alias.sh"
+        [ -f "$dir/init.sh" ] && source "$dir/init.sh"
+    fi
 done
 
 # Load .bashrc from github.com/mahlstrom/*/bin/

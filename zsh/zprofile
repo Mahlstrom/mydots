@@ -1,11 +1,12 @@
-# Login shell-specific configurations
-# Initialize compinit only once
-autoload -Uz compinit
-compinit -i
+# zprofile - Sourced for login shells
 
+# Load shared path configuration
+[[ -f "$HOME/.config/common/path.sh" ]] && source "$HOME/.config/common/path.sh"
+
+# Homebrew Bundle
+export HOMEBREW_BUNDLE_FILE="$HOME/.config/homebrew/Brewfile_$MACHINE"
+
+# Load tool-specific .zprofile files
 for file in $HOME/.config/*/.zprofile(N); do
-  if [[ -f $file ]]; then
-    source "$file"
-  fi
+  source "$file"
 done
-

@@ -1,6 +1,3 @@
-echo '-----------------------------------'
-echo $PATH | tr ':' '\n';
-echo '-----------------------------------'
 # Interactive shell-specific configurations
 
 # Zsh options
@@ -16,50 +13,24 @@ SAVEHIST="10000"
 HISTFILE="$HOME/.zsh_history"
 mkdir -p "$(dirname "$HISTFILE")"
 
-# Plugins and aliases
+# Initialize completion system
+autoload -Uz compinit
+compinit
+
+# Plugins
 source $HOME/.config/zsh/zsh-autosuggestions.zsh
 ZSH_AUTOSUGGEST_STRATEGY=(history)
 
-# Initialization scripts (check if commands exist)
-if (( $+commands[starship] )); then
-  eval "$($HOMEBREW_PREFIX/bin/starship init zsh)"
-fi
-
-if (( $+commands[fzf] )); then
-  eval "$($HOMEBREW_PREFIX/bin/fzf --zsh)"
-fi
-
-if (( $+commands[zoxide] )); then
-  eval "$($HOMEBREW_PREFIX/bin/zoxide init zsh)"
-fi
-
-if (( $+commands[direnv] )); then
-  eval "$($HOMEBREW_PREFIX/bin/direnv hook zsh)"
-fi
-
 bindkey -e
 
-# kubectl autocompletion
-if (( $+commands[kubectl] )); then
-  source <(kubectl completion zsh)
-fi
-
-# sesh-sessions function
-function sesh-sessions() {
-  local session
-  session=$(sesh list -t -c | fzf --height 40% --reverse --border --border-label ' sesh ' --prompt '⚡  ')
-  [[ -z "$session" ]] && return
-  sesh connect $session
-}
-
-zle -N sesh-sessions
-bindkey -M emacs '\es' sesh-sessions
-bindkey -M vicmd '\es' sesh-sessions
-bindkey -M viins '\es' sesh-sessions
-
-for file in $HOME/.config/*/.zshrc(N); do
-  if [[ -f $file ]]; then
-    source "$file"
+# Load tool-specific configs
+for dir in $HOME/.config/*(/); do
+  local tool_name=$(basename "$dir")
+  # Only load if the tool exists (or if it's a generic config folder)
+  if [[ "$tool_name" == "zsh" || "$tool_name" == "bash" || "$tool_name" == "common" ]] || (( $+commands[$tool_name] )); then
+    [[ -f "$dir/.zshrc" ]] && source "$dir/.zshrc"
+    [[ -f "$dir/alias.sh" ]] && source "$dir/alias.sh"
+    [[ -f "$dir/init.sh" ]] && source "$dir/init.sh"
   fi
 done
 
@@ -68,5 +39,37 @@ for file in $HOME/github.com/mahlstrom/*/bin/.zshrc(N); do
     source "$file"
   fi
 done
-source ~/.config/zsh/alias.sh
+
+
+# bun completions
+[ -s "/Users/mahlstrom/.bun/_bun" ] && source "/Users/mahlstrom/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# #glab fix
+# function glab_auto() {
+#   repo_url=$(git remote get-url origin)
+#   api_url=${repo_url/git@git.lab.ufly.se:/https:\/\/git.lab.ufly.se\/}
+#   api_url=${api_url/gitssh.lab.ufly.se/git.lab.ufly.se}
+#   glab "$@" --repo "$api_url"
+# }
+
+
+#glab fix
+function glab_auto() {
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1 && git remote get-url origin >/dev/null 2>&1; then
+    repo_url=$(git remote get-url origin)
+    if [[ "$repo_url" == *ufly.se* ]]; then
+      api_url=${repo_url/git@git.lab.ufly.se:/https:\/\/git.lab.ufly.se\/}
+      api_url=${api_url/gitssh.lab.ufly.se/git.lab.ufly.se}
+      command glab "$@" --repo "$api_url"
+      return
+    fi
+  fi
+  command glab "$@"
+}
+
+alias glab=glab_auto
 
