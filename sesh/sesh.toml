@@ -12,7 +12,7 @@
 blacklist = ["scratch"]
 
 [default_session]
-startup_command = "nvim +GoToFile"
+# startup_command = "nvim +GoToFile"
 startup_command_ignore_dirs = ["~/repos", "~/.config"]
 preview_command = "eza --all --git --icons --color=always {}"
 
@@ -25,6 +25,14 @@ startup_command = "nvim"
 name = "Provisioning"
 path = "~/github.com/mahlstrom/provisioning"
 startup_command = "nvim"
+
+[[session]]
+name = "Edu"
+path = "~/Documents/Edu/Dataplattformar Dataintegration Molnlösningar2"
+
+[[session]]
+name = "PoC"
+path = "~/github.com/mahlstrom/flight"
 
 [[session]]
 name = "Second brain 🧠"

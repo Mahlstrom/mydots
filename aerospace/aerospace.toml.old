@@ -155,15 +155,61 @@ alt-shift-9 = 'move-node-to-workspace --focus-follows-window 9'
 alt-shift-semicolon = 'mode service'
 
 [workspace-to-monitor-force-assignment]
-1 = ['\(AirPlay\)$', 'DELL U2515H', 'D27QO', 3, 2, '^built-in retina display$']
-2 = ['\(AirPlay\)$', 'DELL U2515H', 'D27QO', 3, 2, '^built-in retina display$']
-3 = ['\(AirPlay\)$', 'DELL U2515H', 'D27QO', 3, 2, '^built-in retina display$']
-4 = ['\(AirPlay\)$', 'DELL U2515H', 'D27QO', 3, 2, '^built-in retina display$']
-5 = ['^built-in retina display$']
-6 = ['^built-in retina display$']
-7 = ['\(AirPlay\)$', 'DELL U2515H', 'S34CG50', 2, '^built-in retina display$']
-8 = ['\(AirPlay\)$', 'DELL U2515H', 'S34CG50', 2, '^built-in retina display$']
-9 = ['\(AirPlay\)$', 'DELL U2515H', 'S34CG50', 2, '^built-in retina display$']
+1 = [
+  'mini4 (AirPlay)',
+  'DELL U2515H',
+  'D27QO',
+  3,
+  2,
+  '^built-in retina display$',
+]
+2 = [
+  'mini4 (AirPlay)',
+  'DELL U2515H',
+  'D27QO',
+  3,
+  2,
+  '^built-in retina display$',
+]
+3 = [
+  'mini4 (AirPlay)',
+  'DELL U2515H',
+  'D27QO',
+  3,
+  2,
+  '^built-in retina display$',
+]
+4 = [
+  'mini4 (AirPlay)',
+  'DELL U2515H',
+  'D27QO',
+  3,
+  2,
+  '^built-in retina display$',
+]
+5 = ['mini4 (AirPlay)', '^built-in retina display$']
+6 = ['mini4 (AirPlay)', '^built-in retina display$']
+7 = [
+  'mini4 (AirPlay)',
+  'DELL U2515H',
+  'S34CG50',
+  2,
+  '^built-in retina display$',
+]
+8 = [
+  'mini4 (AirPlay)',
+  'DELL U2515H',
+  'S34CG50',
+  2,
+  '^built-in retina display$',
+]
+9 = [
+  'mini4 (AirPlay)',
+  'DELL U2515H',
+  'S34CG50',
+  2,
+  '^built-in retina display$',
+]
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
@@ -219,17 +265,6 @@ run = ['move-node-to-workspace 7']
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
 run = ['move-node-to-workspace 3']
-
-[[on-window-detected]]
-if.app-id = 'com.google.Chrome'
-if.window-title-regex-substring = 'Strudel REPL'
-run = [
-  # 'layout horizontal',
-  'layout tiling',
-  "exec-and-forget ~/.config/aerospace/setup-strudel.sh",
-  #   "exec-and-forget sh -c 'sleep 0.9 && aerospace focus --window-id $_window-id && aerospace resize width 33 && aerospace focus left'",
-
-]
 
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'

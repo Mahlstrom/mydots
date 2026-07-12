@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# dps-all: show all Docker containers (Swarm + local) across all nodes
+# TODO:
+#   - Config file support
+#   - Timeout / unreachable node handling
+#   - CLI flags (--all, --json)
+#   - Repo structure / install instructions
+
+dps-all() {
+  local leader="${DPS_LEADER:-}"
+  if [[ -z "$leader" ]]; then
+    echo "Error: DPS_LEADER is not set" >&2
+    return 1
+  fi
+
+  # Get list of Swarm nodes from the leader
+  local nodes
+  nodes=$(ssh "$leader" docker node ls --format '{{.Hostname}}') || {
+    echo "Failed to get node list from leader '$leader'" >&2
+    return 1
+  }
+
+  # Header row
+  printf "\e[1mNODE\tNAME\tIMAGE\tMODE\e[0m\n"
+
+  # Function to fetch docker ps from one node
+  fetch_node_ps() {
+    local node="$1"
+    ssh "$node" docker ps --format $'{{if .Label "com.docker.swarm.service.name"}}{{.Label "com.docker.swarm.service.name"}}{{else}}{{.Names}}{{end}}\t{{.Image}}\t{{if .Label "com.docker.swarm.service.name"}}\e[32mSWARM\e[0m{{else}}\e[36mLOCAL\e[0m{{end}}' \
+      | sed "s/^/${node}\t/"
+  }
+
+  # Export function for parallel use
+  export -f fetch_node_ps
+
+  # Fetch all nodes in parallel
+  # Adjust -P 4 to number of parallel SSH sessions you want
+  parallel -j 4 fetch_node_ps ::: $nodes 2>/dev/null \
+    | column -t -s $'\t'
+}
+
