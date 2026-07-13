@@ -4,6 +4,7 @@
 
 [core]
 	sshCommand = "ssh -i ~/.config/ssh_pub/github_home.pub"
+  excludesfile = "~/.gitignore"
 
 [init]
 	defaultBranch = main

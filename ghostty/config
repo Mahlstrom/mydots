@@ -1,5 +1,8 @@
-theme = Hipster Green
+# theme = Catppuccin Latte
 # theme = Novel
+# theme = Catppuccin Frappe
+theme = Nord
+
 
 #
 # https://gist.github.com/renxzen/d9888fc945f4185eb63d91c97d3cfad3
@@ -14,8 +17,8 @@ macos-titlebar-style = hidden
 macos-window-shadow = false
 macos-non-native-fullscreen = false
 
-background-opacity = 0.8
-background-blur-radius = 20
+# background-opacity = 0.8
+# background-blur-radius = 20
 
 font-thicken = true
 
@@ -33,3 +36,9 @@ keybind = cmd+k=text:\x1bk
 font-family-bold = JetBrains Mono Bold
 font-family-italic= JetBrains Mono Italic
 font-family-bold-italic = JetBrains Mono Bold Italic
+
+# keybind = global:cmd+grave_accent=toggle_quick_terminal
+keybind = global:alt+tab=toggle_quick_terminal
+keybind = ctrl+enter=text:\x1b[13;5u
+quick-terminal-position = bottom
+

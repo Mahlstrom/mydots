@@ -32,7 +32,10 @@ format = '\[[$symbol($version)]($style)\]'
 format = '\[[$symbol($version)]($style)\]'
 
 [docker_context]
-format = '\[[$symbol$context]($style)\]'
+format = '[\[[🐋 $context](blue bold)\]](lightblue bold)'
+disabled = false
+only_with_files = false
+
 
 [dotnet]
 format = '\[[$symbol($version)(🎯 $tfm)]($style)\]'
@@ -200,4 +203,3 @@ format = '\[[$symbol($version)]($style)\]'
 
 [solidity]
 format = '\[[$symbol($version)]($style)\]'
-
