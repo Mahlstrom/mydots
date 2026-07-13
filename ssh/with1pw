@@ -1,0 +1,8 @@
+# 1. Den bärbara mallen som fångar upp alla servrar där du vill ha 1Password
+Match Host *.1pw
+    # Skapar den självsanerande tunneln till din lokala 1Password-agent
+    RemoteForward /tmp/1pw.sock "%d/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+# 2. Dina faktiska servrar (Här mappar vi mini-m4-24.1pw till det riktiga namnet)
+Host mini-m4-24.1pw
+    HostName mini-m4-24
