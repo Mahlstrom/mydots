@@ -1,0 +1,138 @@
+#!/usr/bin/env bash
+
+# ---------- Modifier decoding ----------
+decode_modifiers() {
+  local flags=$1
+  local result=""
+
+  ((flags & 1048576)) && result+="Cmd+"
+  ((flags & 524288)) && result+="Shift+"
+  ((flags & 262144)) && result+="Option+"
+  ((flags & 131072)) && result+="Ctrl+"
+
+  echo "${result%+}"
+}
+
+# ---------- Keycode mapping ----------
+keycode_to_key() {
+  case "$1" in
+  0) echo "A" ;;
+  1) echo "S" ;;
+  2) echo "D" ;;
+  3) echo "F" ;;
+  4) echo "H" ;;
+  5) echo "G" ;;
+  6) echo "Z" ;;
+  7) echo "X" ;;
+  8) echo "C" ;;
+  9) echo "V" ;;
+  11) echo "B" ;;
+  12) echo "Q" ;;
+  13) echo "W" ;;
+  14) echo "E" ;;
+  15) echo "R" ;;
+  16) echo "Y" ;;
+  17) echo "T" ;;
+  18) echo "1" ;;
+  19) echo "2" ;;
+  20) echo "3" ;;
+  21) echo "4" ;;
+  22) echo "6" ;;
+  23) echo "5" ;;
+  24) echo "=" ;;
+  25) echo "9" ;;
+  26) echo "7" ;;
+  27) echo "-" ;;
+  28) echo "8" ;;
+  29) echo "0" ;;
+  30) echo "]" ;;
+  31) echo "O" ;;
+  32) echo "U" ;;
+  33) echo "[" ;;
+  34) echo "I" ;;
+  35) echo "P" ;;
+  36) echo "Return" ;;
+  37) echo "L" ;;
+  38) echo "J" ;;
+  39) echo "'" ;;
+  40) echo "K" ;;
+  41) echo ";" ;;
+  42) echo "\\" ;;
+  43) echo "," ;;
+  44) echo "/" ;;
+  45) echo "N" ;;
+  46) echo "M" ;;
+  47) echo "." ;;
+  48) echo "Tab" ;;
+  49) echo "Space" ;;
+  50) echo '`' ;;
+  51) echo "Delete" ;;
+  53) echo "Esc" ;;
+  123) echo "←" ;;
+  124) echo "→" ;;
+  125) echo "↓" ;;
+  126) echo "↑" ;;
+  *) echo "KeyCode($1)" ;;
+  esac
+}
+
+# ---------- Action ID to Name mapping ----------
+id_to_name() {
+  case "$1" in
+  32) echo "Mission Control" ;;
+  33) echo "Application Windows" ;;
+  34) echo "Show Desktop" ;;
+  64) echo "Spotlight" ;;
+  65) echo "Finder Search Window" ;;
+  79) echo "Move Left a Space" ;;
+  80) echo "Move Right a Space" ;;
+  81) echo "Switch to Desktop 1" ;;
+  82) echo "Switch to Desktop 2" ;;
+  90) echo "Screenshot (Selection)" ;;
+  91) echo "Screenshot (Window)" ;;
+  92) echo "Screenshot (Screen)" ;;
+  233) echo "Spotlight Search" ;;
+  235) echo "Show Notification Center" ;;
+  237) echo "Switch Input Source" ;;
+  238) echo "Show Emoji & Symbols" ;;
+  239) echo "Dictation / Voice Control" ;;
+  *) echo "Action ID $1" ;;
+  esac
+}
+
+# ---------- Print symbolic hotkeys (all) ----------
+echo "=== Symbolic Hotkeys ==="
+defaults export com.apple.symbolichotkeys - |
+  plutil -convert json -o - - |
+  jq -r '
+  .AppleSymbolicHotKeys
+  | to_entries[]
+  | select(.value.value.parameters?)
+  | "\(.key) \(.value.value.parameters[1]) \(.value.value.parameters[2])"
+' | while read -r id keycode flags; do
+  key=$(keycode_to_key "$keycode")
+  mods=$(decode_modifiers "$flags")
+  action=$(id_to_name "$id")
+  shortcut="$mods"
+  [[ -n "$shortcut" ]] && shortcut+="+"
+  shortcut+="$key"
+  printf "%-25s → %s\n" "$shortcut" "$action"
+done
+
+# ---------- Print user-defined global menu shortcuts ----------
+echo ""
+echo "=== Global Menu Shortcuts (NSUserKeyEquivalents) ==="
+defaults read -g NSUserKeyEquivalents 2>/dev/null |
+  sed 's/^[[:space:]]*//' |
+  while IFS= read -r line; do
+    # Format: "Menu Item" = "@$^K";
+    menu=$(echo "$line" | awk -F'=' '{print $1}' | tr -d '" ')
+    shortcut_raw=$(echo "$line" | awk -F'=' '{print $2}' | tr -d '"; ')
+    # Convert symbols: @ = Cmd, ^ = Ctrl, ~ = Option, $ = Shift
+    shortcut="$shortcut_raw"
+    shortcut=${shortcut//@/Cmd+}
+    shortcut=${shortcut//^/Ctrl+}
+    shortcut=${shortcut//~/Option+}
+    shortcut=${shortcut//\$/Shift+}
+    printf "%-25s → %s\n" "$shortcut" "$menu"
+  done
