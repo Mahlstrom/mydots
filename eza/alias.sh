@@ -1,0 +1,5 @@
+alias l='eza --icons --git -lF'
+alias la='eza -a'
+alias ll='eza --icons --git -lF --time-style=long-iso'
+alias lla='eza --icons --git -lF -a'
+alias lt='eza --tree'
