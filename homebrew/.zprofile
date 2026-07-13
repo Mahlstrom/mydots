@@ -1,5 +1,4 @@
 # Possible paths for brew
-echo "*** Inside HomeBrew ***"
 BREW_PATHS=(
     "/opt/homebrew/bin/brew"
     "/usr/local/bin/brew"
