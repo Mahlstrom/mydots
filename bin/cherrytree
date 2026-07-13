@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -e
+
+# 1. Hämta de commits som saknas i main
+echo "🔮 Söker efter marinerade ändringar..."
+
+# --no-limit gör att du kan trycka TAB för att välja flera commits!
+VALDA_RADER=$(git log origin/main..HEAD --oneline |
+  gum filter --no-limit --placeholder "Använd TAB för att välja en eller flera commits, tryck ENTER när du är klar..." --height 15)
+
+if [ -z "$VALDA_RADER" ]; then
+  gum format "❌ *Avbrutet av användaren (inga commits valda).* "
+  exit 0
+fi
+
+# 2. Vänd på ordningen av de valda commitsen!
+# Eftersom 'git log' visar nyaste överst, måste vi vända på listan (äldsta först)
+# så att Git cherry-pickar dem i rätt kronologisk ordning.
+KORREKT_ORDNING=$(echo "$VALDA_RADER" | tac)
+
+# Extrahera bara hash-koderna (första ordet på varje rad) till en enda rad
+COMMITS_ATT_PLOCKA=$(echo "$KORREKT_ORDNING" | awk '{print $1}' | tr '\n' ' ')
+
+# 3. Fråga efter namn på din Feature Branch
+BRANCH_NAME=$(gum input --placeholder "Vad ska din nya feature-branch heta?" --value "feature/")
+
+if [ -z "$BRANCH_NAME" ] || [ "$BRANCH_NAME" == "feature/" ]; then
+  gum format "❌ *Du måste ange ett branchnamn.*"
+  exit 1
+fi
+
+TEMP_DIR="$HOME/github.com/mahlstorm/temp-pr"
+
+# 4. Skapa Worktree och kör Cherry-pick på ALLA valda commits
+gum spin --spinner dot --title "Skapar tillfällig arbetsyta..." -- sleep 0.5
+
+cd "$HOME/github.com/mahlstrom/mydots"
+git fetch origin >/dev/null 2>&1
+git worktree add "$TEMP_DIR" -b "$BRANCH_NAME" origin/main >/dev/null 2>&1
+
+cd "$TEMP_DIR"
+
+# Här sker magin: git cherry-pick kan ta emot flera hashar separerade med mellanslag!
+# Exempel: git cherry-pick hash1 hash2 hash3
+gum spin --spinner line --title "Körsbärsplockar dina valda commits..." -- git cherry-pick $COMMITS_ATT_PLOCKA
+
+# 5. Klart!
+ANTAL_COMMITS=$(echo "$VALDA_RADER" | wc -l | tr -d ' ')
+gum format "" "🎉 **Klar för publicering!**" "Lyfte ut **$ANTAL_COMMITS st** commits till \`$BRANCH_NAME\`." ""
+
+if gum confirm "Vill du pusha den här branchen till GitHub direkt?"; then
+  gum spin --spinner line --title "Pushar till GitHub..." -- git push origin "$BRANCH_NAME"
+  gum format "" "🚀 **Pushad och klar!** Öppna en Pull Request för \`$BRANCH_NAME\` på GitHub."
+else
+  gum format "" "💡 *Branchen ligger sparad lokalt i ditt worktree på $TEMP_DIR.*"
+fi
