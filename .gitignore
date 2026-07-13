@@ -39,3 +39,5 @@ goodsettings.sh
 /tmux/old_*
 /tmux-extra
 
+intelephense
+/figlet

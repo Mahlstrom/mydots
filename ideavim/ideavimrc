@@ -158,7 +158,12 @@ nmap <leader>bP <Action>(CloseAllUnpinnedEditors)
 nmap <leader>br <Action>(CloseAllToTheRight)
 
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" AI
 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <leader>ai <Action>(AIChat.OpenChatAction)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Code
