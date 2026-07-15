@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+rm -rf ~/.local/share/nvim_files/mahlstrom
+rm -rf ~/.local/state/nvim_files/mahlstrom/
+rm -rf ~/.cache/nvim_files/mahlstrom
