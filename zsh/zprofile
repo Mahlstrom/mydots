@@ -4,6 +4,8 @@
 [[ -f "$HOME/.config/common/path.sh" ]] && source "$HOME/.config/common/path.sh"
 
 # Homebrew Bundle
+MACHINE=$(hostname)
+export MACHINE
 export HOMEBREW_BUNDLE_FILE="$HOME/.config/homebrew/Brewfile_$MACHINE"
 
 # Load tool-specific .zprofile files
