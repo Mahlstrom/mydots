@@ -1,6 +1,6 @@
 [user]
-	email = "<>"
 	name = "Mahlstrom"
+	email = "<>"
 
 [core]
 	sshCommand = "ssh -i ~/.config/ssh_pub/github_home.pub"
@@ -33,5 +33,15 @@
 
 [includeIf "hasconfig:remote.*.url:git@github.com:0046bmc/**"]
 	path = "$HOME/.config/git/0046bmc.toml"
+
+[alias]
+    forward = "!f() { \
+        action=$1; \
+        shift; \
+        GIT_SSH_COMMAND=\"ssh -o IdentityAgent=/tmp/1pw.sock -o IdentitiesOnly=no\" git $action \"$@\"; \
+    }; f"
+    not-in-main = log origin/main..HEAD --oneline
+    new-in-main = log HEAD..origin/main --oneline
+	clone-bare = "!f() { \\\n  url=\"$1\"; \\\n  dir=\"${2:-$(basename \"$url\" .git)}\"; \\\n  mkdir -p \"$dir\" && cd \"$dir\" && \\\n  git clone --bare \"$url\" .bare && \\\n  echo \"gitdir: ./.bare\" > .git && \\\n  git config remote.origin.fetch \"+refs/heads/*:refs/remotes/origin/*\" && \\\n  git fetch origin && \\\n  main_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed \"s|refs/remotes/origin/||\") && \\\n  main_branch=\"${main_branch:-main}\" && \\\n  git worktree add \"$main_branch\" && \\\n  cd \"$main_branch\" && \\\n  git branch --set-upstream-to=\"origin/$main_branch\" \"$main_branch\" && \\\n  echo \"Done! Now: cd $dir\"; \\\n}; f"
 
 # vim: set ft=dosini :
