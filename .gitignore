@@ -42,3 +42,8 @@ goodsettings.sh
 intelephense
 /figlet
 /jgit/
+
+hunk/*
+!hunk/*.toml
+!hunk/*.yaml
+
