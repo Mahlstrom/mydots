@@ -1,8 +1,8 @@
 # theme = Catppuccin Latte
 # theme = Novel
 # theme = Catppuccin Frappe
-theme = Nord
-
+# theme = Nord
+theme = nordfox
 
 #
 # https://gist.github.com/renxzen/d9888fc945f4185eb63d91c97d3cfad3
@@ -20,7 +20,7 @@ macos-non-native-fullscreen = false
 # background-opacity = 0.8
 # background-blur-radius = 20
 
-font-thicken = true
+# font-thicken = true
 
 cursor-style = block
 cursor-style-blink = false
@@ -32,13 +32,33 @@ keybind = ctrl+shift+tab=text:\x1b[1;5Z
 
 keybind = cmd+j=text:\x1bj
 keybind = cmd+k=text:\x1bk
-
-font-family-bold = JetBrains Mono Bold
-font-family-italic= JetBrains Mono Italic
-font-family-bold-italic = JetBrains Mono Bold Italic
+# font-family = "JetBrainsMono NF Light"
+# font-family-bold = "JetBrainsMono NF SemiBold"
+# font-family-bold-italic = "JetBrainsMono NF SemiBold Italic"
+# font-family-bold = JetBrains Mono Bold
+# font-family-italic= JetBrains Mono Italic
+# font-family-bold-italic = JetBrains Mono Bold Italic
 
 # keybind = global:cmd+grave_accent=toggle_quick_terminal
 keybind = global:alt+tab=toggle_quick_terminal
 keybind = ctrl+enter=text:\x1b[13;5u
 quick-terminal-position = bottom
-
+# font-style-bold = Bold
+# palette = 0=#3b4252
+# palette = 1=#bf616a
+# palette = 2=#a3be8c
+# palette = 3=#ebcb8b
+# palette = 4=#81a1c1
+# palette = 5=#b48ead
+# palette = 6=#88c0d0
+# palette = 7=#e5e9f0
+#
+# # Distinct, lightened versions for bright/light colors
+# palette = 8=#4c566a
+# palette = 9=#d0747d
+# palette = 10=#b5cc9e
+# palette = 11=#f1daae
+# palette = 12=#93b2d2
+# palette = 13=#c5a0be
+# palette = 14=#8fbcbb
+# palette = 15=#eceff4
