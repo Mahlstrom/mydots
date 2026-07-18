@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+brew autoremove
+brew cleanup --prune=all
+brew cleanup -s
+brew doctor
