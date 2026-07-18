@@ -1,119 +1,188 @@
 #!/usr/bin/env zsh
+# Load Zsh's built-in color module
+autoload -U colors && colors
 
-if [ "$#" -gt 0 ]; then
-  dry_run=1
+# for namn in ${(k)color}; do
+for k in ${(k)color[(I)fg-*]};do;fg[${k#fg-}_l]="\e[$(($color[$k]+60))m";done
+fg[black_r]="\e[38;5;16m"
+for k in ${(k)color[(I)bg-*]};do;bg[${k#bg-}_l]="\e[$(($color[$k]+60))m";done
+
+# Default to dry run unless the first argument is explicitly "apply"
+dry_run=1
+if [[ "$1" == "apply" ]]; then
+  dry_run=0
 fi
+BGC=(black_l blue blue_l cyan cyan_l)
+FGC=(white_l white_l white_l black_r black_r)
+PHASE=0
+
+# PHASE=$PHASE+2
+PHASE_BG="blue"
+
+echo ""
+if [[ $dry_run -eq 1 ]]; then
+  echo -e "🔹 ${bold_color}[SIMULATION]${RESET} We are running dry... (Run with 'apply' to execute changes)"
+else
+  echo "🚀 $bold_color [LIVE MODE]$reset_color  Executing setup changes..."
+fi
+echo "========================================="
+
+function print_line() {
+  local the_text="$1"
+  echo "$bg[$BGC[$PHASE]]  $reset_color${(r:$COLUMNS-12:: :)the_text}"
+}
+
+function print_phase() {
+  PHASE=$PHASE+1
+  PHASE_BG=$bg[$BGC[$PHASE]]
+  PHASE_FG=$fg[$FGC[$PHASE]]
+  local phase_text="$1"
+  echo ""
+  echo "$PHASE_BG$PHASE_FG${(r:$COLUMNS-10:: :)phase_text}$reset_color"
+}
+
+# Central function to execute or simulate commands with error handling
+function run() {
+  if [[ "$dry_run" -eq 1 ]]; then
+    print_line "    🚧 dry-run: Would execute: $*"
+  else
+    eval "$@"
+    local exit_status=$? 
+    if [ $exit_status -ne 0 ]; then
+      echo ""
+      echo "  $bold_color❌ ERROR:$reset_color Command failed with exit code $exit_status: $*" >&2
+      echo ""
+      exit $exit_status
+    fi
+  fi
+}
+
 typeset -U path cdpath fpath manpath
+
+# Helper function to backup old configuration and clone the new one
+function backup_and_clone() {
+  local reason="$1"
+  local timestamp=$(date +"%Y-%m-%d_%H:%M:%S")
+  
+  print_line "  $reason"
+  run "mv '$CONFIG_DIR' '${CONFIG_DIR}_$timestamp'"
+  run "git clone '$REMOTE_URL' '$CONFIG_DIR'"
+}
 
 function check_dotconfig() {
   CONFIG_DIR="$HOME/.config"
-  REMOTE_URL="https://github.com/Mahlstrom/mydots"
+  REMOTE_URL="https://github.com"
   REMOTE_IDENTIFIER="Mahlstrom/mydots"
-  echo "Checking for $HOME/.config"
 
-  # Check if the directory exists
-  if [ -d "$CONFIG_DIR" ]; then
-    echo "Config directory already exists."
-    # Check if it's a git repository
-    if git -C "$CONFIG_DIR" rev-parse >/dev/null 2>&1; then
-      # Check if Mahlstrom/dotfiles.nix
-      if git -C "$CONFIG_DIR" remote get-url origin | grep -q "Mahlstrom/dotfiles.nix"; then
-        echo "Old config. Convert when done!"
-        return 0;
-      fi
-      # Check if the remote fetch origin contains the required identifier
-      if git -C "$CONFIG_DIR" remote get-url origin | grep -q "$REMOTE_IDENTIFIER"; then
-        echo "$CONFIG_DIR is already a valid git repository."
-        pushd "$CONFIG_DIR" || exit
-        if [[ $(git status --porcelain) ]]; then
-          echo "You have changes in your dotfiles directory"
-        else
-          if [ "$dry_run" -eq 1 ]; then
-            echo "Dry run: Would pull latest changes in $CONFIG_DIR."
-          else
-            git pull --ff-only
-          fi
-        fi
-        popd || exit
-      else
-        # Rename the directory with current date and time
-        TIMESTAMP=$(date +"%Y-%m-%d_%H:%M:%S")
-        if [ "$dry_run" -eq 1 ]; then
-          echo "Dry run: Would rename existing directory to ${CONFIG_DIR}_$TIMESTAMP."
-        else
-          mv "$CONFIG_DIR" "${CONFIG_DIR}_$TIMESTAMP"
-          echo "Renamed existing directory to ${CONFIG_DIR}_$TIMESTAMP."
-        fi
-      fi
-    else
-      # Rename the directory if it's not a git repository
-      TIMESTAMP=$(date +"%Y-%m-%d_%H:%M:%S")
-      if [ "$dry_run" -eq 1 ]; then
-        echo "Dry run: Would rename non-git directory to ${CONFIG_DIR}_$TIMESTAMP."
-      else
-        mv "$CONFIG_DIR" "${CONFIG_DIR}_$TIMESTAMP"
-        echo "Renamed non-git directory to ${CONFIG_DIR}_$TIMESTAMP."
-      fi
-    fi
+  # Case 1: Directory does not exist -> Clone directly and exit
+  if [ ! -d "$CONFIG_DIR" ]; then
+    print_line "  🔹 Config directory missing, preparing fresh clone..."
+    run "git clone '$REMOTE_URL' '$CONFIG_DIR'"
+    return 0
   fi
 
-  if [ ! -d "$CONFIG_DIR" ]; then
-    # Clone the repository
-    if [ "$dry_run" -eq 1 ]; then
-      echo "Dry run: Would clone repository from $REMOTE_URL into $CONFIG_DIR."
-    else
-      git clone "$REMOTE_URL" "$CONFIG_DIR"
-      echo "Cloned repository into $CONFIG_DIR."
-    fi
+  print_line "  ✅ Config directory already exists."
+
+  # Case 2: Not a git repository -> Backup and clone
+  if ! git -C "$CONFIG_DIR" rev-parse >/dev/null 2>&1; then
+    backup_and_clone "🔹 Existing directory is not a git repository. Backing up..."
+    return 0
+  fi
+
+  # Case 3: Old nix repository -> Warn and exit
+  if git -C "$CONFIG_DIR" remote get-url origin 2>/dev/null | grep -iq "Mahlstrom/dotfiles.nix"; then
+    print_line "  🔹 Old config (dotfiles.nix) detected. Convert when done!"
+    return 0
+  fi
+
+  # Case 4: Git repository, but wrong remote URL -> Backup and clone
+  if ! git -C "$CONFIG_DIR" remote get-url origin 2>/dev/null | grep -iq "$REMOTE_IDENTIFIER"; then
+    backup_and_clone "🔹 Repository URL mismatch. Backing up existing repo..."
+    return 0
+  fi
+
+  # Case 5: Correct repository! Handle local changes or perform a pull
+  print_line "  ✨ Repository URL verified successfully."
+  if [[ $(git -C "$CONFIG_DIR" status --porcelain) ]]; then
+    print_line "  🔹 You have uncommitted changes in your dotfiles directory!"
+  else
+    print_line "  🔄 Pulling latest changes from remote..."
+    run "git -C '$CONFIG_DIR' pull --ff-only"
   fi
 }
 
 function checksymlink() {
   local ln_path="$1"
   local target="$2"
-  echo $SHELL
-  echo "checking if $ln_path is a symlink to $target"
+  
+  print_line "  🔗 Link: ${ln_path} ➔ ${target}"
+  
   if [ "$ln_path" -ef "$target" ]; then
-    echo "$ln_path is correctly symlinked"
-  else
-    if [ "$dry_run" -eq 1 ]; then
-      echo "Dry run: Would create symlink from $ln_path to $target."
-    else
-      ln -s "$target" "$ln_path"
-    fi
+    print_line "    ✅ Already correctly linked."
+    return 0
   fi
+
+  # If the file/link exists but points to the wrong place, remove it first
+  if [ -e "$ln_path" ] || [ -L "$ln_path" ]; then
+    print_line "    🔹 Path exists but points elsewhere. Clearing old path..."
+    run "rm -f '$ln_path'"
+  fi
+
+  run "ln -s '$target' '$ln_path'"
 }
 
 function check_install() {
-  thecmd="$1"
-  the_installcmd="$2"
-  if ! command -v $thecmd 2>&1 >/dev/null; then
-    echo "installing $thecmd"
-    if [ "$dry_run" -eq 1 ]; then
-      echo "Dry run: Would execute \"$the_installcmd\"."
-    else
-      eval "$the_installcmd"
-    fi
+  local thecmd="$1"
+  local the_installcmd="$2"
+  
+  if ! command -v "$thecmd" &>/dev/null; then
+    print_line "  📦 $thecmd is missing. Starting installation..."
+    run "$the_installcmd"
+  else
+    print_line "  ✅ $thecmd is already installed."
   fi
 }
 
+# --- EXECUTION STARTS HERE ---
+
+print_phase "💎 Phase 1: Checking Git"
 check_install "git" "xcode-select --install"
 
+print_phase "💎 Phase 2: 📁 Checking dotfiles configuration ($HOME/.config)"
 check_dotconfig
-source "$HOME/.config/homebrew/.zshenv"
-check_install "brew" '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
+
+# If the file does not exist during dry-run (e.g., on a brand new Mac), avoid crashing the script on source
+if [ -f "$HOME/.config/homebrew/.zshenv" ]; then
+  echo "  💎 Sourcing Homebrew environment..."
+  source "$HOME/.config/homebrew/.zshenv"
+fi
+
+print_phase "💎 Phase 3: Package Management & CLI Apps"
+check_install "brew" '/bin/bash -c "$(curl -fsSL https://githubusercontent.com)"'
+
 pushd "$HOME/.config" || exit
+
 check_install "gum" "brew install gum"
 check_install "ghostty" "brew install --cask ghostty"
+
+print_phase "💎 Phase 4: Creating Symlinks"
 checksymlink "$HOME/.zshrc" "$HOME/.config/zsh/zshrc"
 checksymlink "$HOME/.zshenv" "$HOME/.config/zsh/zshenv"
 checksymlink "$HOME/.zprofile" "$HOME/.config/zsh/zprofile"
-checksymlink "$HOME/.zprofile" "$HOME/.config/zsh/zprofile"
 checksymlink "$HOME/.ideavimrc" "$HOME/.config/ideavim/ideavimrc"
 
-# checksymlink "$HOME/.config/nvim_files" "$HOME/github.com"
-#
-# git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+# Run the init script if it is actually found (prevents crash if the directory is empty during dry-run)
+if : */init.sh(N); then
+  print_phase "💎 Phase 4: Running Initialization Scripts"
+  for init_script in */init.sh(N); do
+    print_line "  🔄 Sourcing initialization script: $init_script"
+    run "source '$init_script'"
+  done
+fi
 
-source */init.sh
 popd || exit
+
+echo ""
+echo "========================================="
+echo "$bold_color🎉 Setup script finished successfully!$reset_color"
+echo ""
