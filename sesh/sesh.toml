@@ -17,7 +17,7 @@ startup_command_ignore_dirs = ["~/repos", "~/.config"]
 preview_command = "eza --all --git --icons --color=always {}"
 
 [[session]]
-name = "Dotfiles 🔥"
+name = "Dotfiles "
 path = "~/.config"
 startup_command = "nvim"
 
