@@ -1,0 +1,1 @@
+figlet -f ~/.config/figlet/ANSI\ Shadow "${*}" | head -n 6| sed '${/^$/d;}' | tr ' ' '⠀' | gum style --border=double --foreground=12 --border-foreground=12 --padding "1 5" 
