@@ -3,8 +3,14 @@ if [[ -z "$ZSHENV_LOADED" ]]; then
   export ZSHENV_LOADED=1
   export CLICOLOR="1"
   export EDITOR="nvim"
-  export NVIM_APPNAME="nvim_files/mahlstrom/nvim-newsbs/"
-  export NVIM_APPNAME2="nvim_files/mahlstrom/nvim/"
+  if [[ -d ~/github.com/mahlstrom/nvim/.bare && -d ~/github.com/mahlstrom/nvim/main ]]; then
+    export NVIM_APPNAME="nvim_files/mahlstrom/nvim/main"
+    export NVIM_APPNAME2="nvim_files/mahlstrom/nvim-newsbs/"
+  else
+    export NVIM_APPNAME="nvim_files/mahlstrom/nvim-newsbs/"
+    export NVIM_APPNAME2="nvim_files/mahlstrom/nvim/"
+  fi
+  export NVIM_APPNAME3="nvim_files/mahlstrom/nvim2/"
   export PAGER="less"
 
   # Load tool-specific .zshenv files
