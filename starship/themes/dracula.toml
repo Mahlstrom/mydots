@@ -1,0 +1,28 @@
+[palettes.dracula]
+palette = "dracula"
+
+# Core interface layers
+bg_main = "#282a36"      # Official Dracula background
+fg_main = "#f8f8f2"      # Official Dracula foreground
+bg_selection = "#44475a" # Official Dracula current line / selection
+bg_comment = "#6272a4"   # Official Dracula comment color
+
+# Primary accent (Pink block)
+bg_primary = "#ff79c6"
+fg_primary = "#282a36"
+
+# Secondary accent (Cyan block for Git/Mise)
+bg_secondary = "#8be9fd"
+fg_secondary = "#282a36"
+
+# Warning status (Orange block)
+bg_warning = "#ffb86c"
+fg_warning = "#282a36"
+
+# Alert status (Red block)
+bg_alert = "#ff5555"
+fg_alert = "#f8f8f2"
+
+# Informational notes (Yellow block)
+bg_info = "#f1fa8c"
+fg_info = "#282a36"

@@ -1,0 +1,260 @@
+"$schema" = 'https://starship.rs'
+add_newline = false
+palette = "none"
+scan_timeout = 50
+command_timeout = 500
+
+# $env_var\
+# format = """
+# $hostname$os$username\
+# $directory\
+# [](bg:graphite fg:slate)\
+# $git_branch\
+# $git_status\
+# [](bg:graphite2 fg:graphite)\
+# $c\
+# $cpp\
+# $dart\
+# $rust\
+# $golang\
+# $nodejs\
+# $php\
+# $java\
+# $kotlin\
+# $haskell\
+# $python\
+# ${env_var.VIRTUAL_ENV}\
+# $swift\
+# $terraform\
+# [](bg:sky fg:graphite2)\
+# $direnv$mise\
+# [](fg:sky)\
+# $status\
+# """
+
+format = """\
+$time \
+([](bg:bg_main fg:bg_primary)$os$username$hostname[](bg:bg_main fg:bg_primary))\
+($all\n)\
+($git_branch | $git_status | $git_metrics$git_state$git_commit\n)\
+[](bg:bg_main fg:bg_comment)\
+$directory\
+[](bg:bg_selection fg:bg_comment)\
+[](bg:bg_main fg:bg_selection)\
+[](bg:bg_secondary fg:bg_main)\
+$direnv$mise[](fg:bg_secondary)$status\
+"""
+
+[character]
+disabled = true
+
+[hostname]
+ssh_only = true
+format = "[$hostname](bg:bg_warning fg:fg_warning bold)[](bg:bg_primary fg:bg_warning)"
+
+# [container]
+# disabled = false
+# format = '[](bg:#585858 fg:#d0d0d0)[$container](bg:#585858 fg:#d0d0d0)'
+
+[os]
+disabled = true
+style = "bg:bg_primary fg:fg_primary"
+
+[os.symbols]
+Windows = ""
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+AOSC = ""
+Arch = "󰣇"
+Artix = "󰣇"
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+
+[username]
+# show_always = true
+style_user = "bg:bg_primary fg:fg_primary bold"
+style_root = "bg:bg_primary fg:fg_primary bold"
+format = '[ $user]($style)'
+
+# cwd
+[directory]
+truncation_length = 2
+truncation_symbol = "…/"
+use_os_path_sep = true
+style = "bg:bg_comment fg:fg_main bold"
+format = "[$path]($style)"
+
+substitutions = [
+  { from = "Desktop", to = " " },
+  { from = "Documents", to = "󰈙 " },
+  { from = "Downloads", to = " " },
+  { from = "Music", to = "󰝚 " },
+  { from = "Pictures", to = " " },
+  { from = "Works", to = " " },
+  { from = "bitbucket.org", to = " " },
+  # { from = "~/github.com[^/]*", to = " ", regex = true },
+  { from = "~/github.com[^/]*", to = " ", regex = true },
+  { from = "gitlab[^/]*", to = " ", regex = true },
+  { from = "~/Developer[^/]*", to = " ", regex = true },
+  { from = "Dropbox", to = " " },
+]
+
+[git_branch]
+symbol = ""
+format = "[$symbol $branch ](bg:bg_selection fg:fg_main bold)"
+
+[git_status]
+format = "[$all_status$ahead_behind](bg:bg_selection fg:bg_info)"
+conflicted = '🏳'
+ahead = '🏎💨'
+behind = '😰'
+diverged = '😵'
+up_to_date = '✓'
+untracked = '🤷'
+stashed = '📦'
+modified = '📝'
+staged = '[++\($count\)](green)'
+renamed = '👅'
+deleted = '🗑'
+
+[git_metrics]
+disabled = false
+
+[bun]
+style = "bg:bg_warning fg:bg_main italic"
+version_format = "${major}.${minor}"
+format = '[](bg:bg_main fg:bg_warning)[$symbol$version]($style)[](bg:bg_main fg:bg_warning)'
+
+
+[c]
+symbol = "󰙱 "
+style = "bg:bg_main fg:fg_main italic"
+version_format = "${major}.${minor}"
+format = '[$symbol$version]($style)'
+
+[cpp]
+symbol = "󰙲 "
+style = "bg:bg_main fg:fg_main italic"
+version_format = "${major}.${minor}"
+format = '[$symbol$version]($style)'
+
+[dart]
+symbol = " "
+style = "bg:bg_main fg:fg_main italic"
+version_format = "${major}.${minor}"
+format = '[$symbol$version]($style)'
+
+[golang]
+symbol = "󰟓 "
+style = "bg:bg_main fg:fg_main italic"
+version_format = "${major}.${minor}"
+format = '[$symbol$version]($style)'
+
+[haskell]
+symbol = " "
+style = "bg:bg_main fg:fg_main italic"
+version_format = "${major}.${minor}"
+format = '[$symbol$version]($style)'
+
+[java]
+symbol = " "
+style = "bg:bg_main fg:fg_main italic"
+version_format = "${major}.${minor}"
+format = '[$symbol$version]($style)'
+
+[kotlin]
+symbol = " "
+style = "bg:bg_main fg:fg_main italic"
+version_format = "${major}.${minor}"
+format = '[$symbol$version]($style)'
+
+[nodejs]
+symbol = "󰎙 "
+style = "bg:bg_warning fg:bg_main italic"
+version_format = "${major}.${minor}"
+format = '[](bg:bg_main fg:bg_warning)[$symbol$version]($style)[](bg:bg_main fg:bg_warning)'
+
+[php]
+symbol = " "
+style = "bg:bg_warning fg:bg_main italic"
+version_format = "${major}.${minor}"
+format = '[](bg:bg_main fg:bg_warning)[$symbol$version]($style)[](bg:bg_main fg:bg_warning)'
+
+[python]
+symbol = " "
+style = "bg:bg_main fg:fg_main"
+version_format = "${major}.${minor}"
+format = '[$symbol]($style)[$version]($style italic)'
+
+[env_var.VIRTUAL_ENV]
+variable = "VIRTUAL_ENV"
+symbol = "󰑓"
+style = "bg:bg_main fg:fg_main"
+format = "[ $symbol ]($style)"
+
+[rust]
+symbol = " "
+style = "bg:bg_main fg:fg_main italic"
+version_format = "${major}.${minor}"
+format = '[$symbol$version]($style)'
+
+[swift]
+symbol = " "
+style = "bg:bg_main fg:fg_main italic"
+version_format = "${major}.${minor}"
+format = '[$symbol$version]($style)'
+
+[terraform]
+symbol = " "
+style = "bg:bg_main fg:fg_main bold italic"
+version_format = "${major}.${minor}"
+format = '[$symbol$version]($style)'
+
+[mise]
+disabled = false
+symbol = "󰑓 "
+style = "bg:bg_secondary fg:fg_secondary"
+format = "[$symbol$health]($style)"
+
+[direnv]
+disabled = false
+symbol = "󰑓 "
+style = "bg:bg_secondary fg:fg_secondary bold"
+allowed_msg = "   "
+not_allowed_msg = "   "
+loaded_msg = " "
+unloaded_msg = " "
+format = '[$symbol$env]($style)'
+
+# [docker_context]
+# symbol = "   "
+# style = "bg:sky fg:on_sky bold"
+# format = '[$symbol$context]($style)'
+
+# last_pipe_status
+[status]
+disabled = false
+style = "bg:bg_alert fg:fg_alert bold"
+format = "[ $status ]($style)[](fg:bg_alert bg:bg_main)"
+
+# time (right side)
+[time]
+disabled = false
+style = "fg:on_slate"
+format = "[󰥔 $time]($style)"
+time_format = "%H:%M:%S"
+
+[line_break]
+disabled = true

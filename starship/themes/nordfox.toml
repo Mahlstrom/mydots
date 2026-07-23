@@ -1,0 +1,27 @@
+[palettes.nordfox]
+
+# Core interface layers (The dark, arctic gray-blues)
+bg_main = "#2e3440"      # Nordfox base background (nord0/nord1)
+fg_main = "#cdcecf"      # Nordfox default light text (fg1)
+bg_selection = "#3b4252" # Nordfox selection/current line (nord2)
+bg_comment = "#60728a"   # Nordfox muted comment color (comment)
+
+# Primary accent (The soft pink/magenta block)
+bg_primary = "#b48ead" # Nordfox pink/magenta (nord15)
+fg_primary = "#232831" # Dark contrast text for the pink block
+
+# Secondary accent (The arktiska cyan block for Git/Mise)
+bg_secondary = "#81a1c1" # Nordfox frost blue (nord9)
+fg_secondary = "#232831" # Dark contrast text for the cyan block
+
+# Warning status (The orange block)
+bg_warning = "#d08770" # Nordfox orange (nord12)
+fg_warning = "#232831" # Dark contrast text for the orange block
+
+# Alert status (The red block)
+bg_alert = "#bf616a" # Nordfox red (nord11)
+fg_alert = "#cdcecf" # Light contrast text for the red block
+
+# Informational notes (The yellow block)
+bg_info = "#ebcb8b" # Nordfox yellow (nord13)
+fg_info = "#232831" # Dark contrast text for the yellow block
