@@ -1,0 +1,15 @@
+set_starship_theme() {
+  local new_Palette=$1
+  local theme_file="$HOME/.config/starship/themes/$new_Palette.toml"
+
+  echo "Trying $theme_file"
+  if [[ -f "$theme_file" ]]; then
+    yq eval-all -p toml -o toml 'select(fi == 0).palette = "'$new_Palette'" | . as $item ireduce ({}; . * $item)' \
+      "$HOME/.config/starship/starship_new.toml" \
+      "$HOME/.config/starship/themes/$new_Palette.toml" \
+      > "$HOME/.cache/starship_active.toml"
+    export STARSHIP_CONFIG="$HOME/.cache/starship_active.toml"
+  else
+    echo "Theme not found!"
+  fi
+}

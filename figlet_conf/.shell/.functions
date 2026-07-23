@@ -1,0 +1,29 @@
+myfig() {
+    if [ -z "$1" ]; then
+        echo "Usage: myfig \"your text\""
+        return 1
+    fi
+
+    # 1. Generate the raw figlet text
+    local figlet_output
+    figlet_output=$(figlet -f ~/.config/figlet/ANSI\ Shadow.flf "$*")
+
+    trimmed_output=$(echo $figlet_output | awk '{lines[NR]=$0} END {while(NR>0 && lines[NR] ~ /^[[:space:]]*$/) NR--; for(i=1;i<=NR;i++) print lines[i]}')
+    # 2. Strip trailing spaces first, THEN find the true visual width
+    local max_width
+    max_width=$(echo "$trimmed_output" | sed 's/./\./g'| wc -L)
+
+    # 3. Add a small buffer (+2) for the double border framing
+    local final_width=$((max_width + 6))
+
+    # 4. Swap leading/middle spaces with the invisible Braille blank
+    # and send it right into gum style
+    echo "$figlet_output" | tr ' ' '⠀' | gum style \
+        --foreground 12 \
+        --border-foreground 12 \
+        --border double \
+        --align center \
+        --width "$final_width" \
+        --margin "1 2" \
+        --padding "1 3"
+}

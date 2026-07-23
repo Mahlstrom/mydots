@@ -17,17 +17,12 @@ mkdir -p "$(dirname "$HISTFILE")"
 autoload -Uz compinit
 compinit
 
-# Plugins
-source $HOME/.config/zsh/zsh-autosuggestions.zsh
-ZSH_AUTOSUGGEST_STRATEGY=(history)
-
-bindkey -e
-
-# Load tool-specific configs
-for dir in $HOME/.config/*(/); do
+# Load tool-specific configs from .shell/ subdirectory
+for dir in $HOME/.config/*(N/); do
   local tool_name=$(basename "$dir")
   local loadable=0
 
+  # Always load: zsh, bash, common (shell builtins / always-present tools)
   if [[ "$tool_name" == "zsh" || "$tool_name" == "bash" || "$tool_name" == "common" ]] || (( $+commands[$tool_name] )); then
     loadable=1
   elif [[ -f "$dir/.commands" ]]; then
@@ -39,23 +34,16 @@ for dir in $HOME/.config/*(/); do
     done < "$dir/.commands"
   fi
 
-  if (( loadable  )); then
-    [[ -f "$dir/.zshrc" ]] && source "$dir/.zshrc"
-    [[ -f "$dir/alias.sh" ]] && source "$dir/alias.sh"
-    [[ -f "$dir/init.sh" ]] && source "$dir/init.sh"
+  if (( loadable )); then
+    local shell_dir="$dir/.shell"
+    [[ -f "$shell_dir/.functions"  ]] && source "$shell_dir/.functions"
+    [[ -f "$shell_dir/.alias"      ]] && source "$shell_dir/.alias"
+    [[ -f "$shell_dir/.zshrc"      ]] && source "$shell_dir/.zshrc"
+    [[ -f "$shell_dir/.completion" ]] && source "$shell_dir/.completion"
   fi
 done
 
+# Load per-project bin configs
 for file in $HOME/github.com/mahlstrom/*/bin/.zshrc(N); do
-  if [[ -f $file ]]; then
-    source "$file"
-  fi
+  [[ -f "$file" ]] && source "$file"
 done
-
-
-# bun completions
-[ -s "/Users/mahlstrom/.bun/_bun" ] && source "/Users/mahlstrom/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"

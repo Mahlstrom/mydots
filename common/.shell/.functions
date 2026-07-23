@@ -1,0 +1,6 @@
+# Alias a command only if it exists on PATH
+_safe_alias() {
+    if command -v "$2" >/dev/null 2>&1; then
+        alias "$1"="$2"
+    fi
+}

@@ -1,8 +1,11 @@
 if [[ -z "$ZSHENV_LOADED" ]]; then
-  # Environment variables (Global)
   export ZSHENV_LOADED=1
+
+  # Core environment variables
   export CLICOLOR="1"
   export EDITOR="nvim"
+  export PAGER="less"
+
   if [[ -d ~/github.com/mahlstrom/nvim/.bare && -d ~/github.com/mahlstrom/nvim/main ]]; then
     export NVIM_APPNAME="nvim_files/mahlstrom/nvim/main"
     export NVIM_APPNAME2="nvim_files/mahlstrom/nvim-newsbs/"
@@ -11,10 +14,10 @@ if [[ -z "$ZSHENV_LOADED" ]]; then
     export NVIM_APPNAME2="nvim_files/mahlstrom/nvim/"
   fi
   export NVIM_APPNAME3="nvim_files/mahlstrom/nvim2/"
-  export PAGER="less"
 
-  # Load tool-specific .zshenv files
-  for file in $HOME/.config/*/.zshenv(N); do
-    source "$file"
+  # Load .shell/.env and .shell/.path from each tool module
+  for dir in $HOME/.config/*(N/); do
+    [[ -f "$dir/.shell/.env"  ]] && source "$dir/.shell/.env"
+    [[ -f "$dir/.shell/.path" ]] && source "$dir/.shell/.path"
   done
 fi

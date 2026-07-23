@@ -1,14 +1,11 @@
 # zprofile - Sourced for login shells
 
-# Load shared path configuration
-[[ -f "$HOME/.config/common/path.sh" ]] && source "$HOME/.config/common/path.sh"
-
-# Homebrew Bundle
+# Machine identity & Homebrew bundle
 MACHINE=$(hostname)
 export MACHINE
 export HOMEBREW_BUNDLE_FILE="$HOME/.config/homebrew/Brewfile_$MACHINE"
 
-# Load tool-specific .zprofile files
-for file in $HOME/.config/*/.zprofile(N); do
-  source "$file"
+# Load .shell/.zprofile from each tool module
+for dir in $HOME/.config/*(N/); do
+  [[ -f "$dir/.shell/.zprofile" ]] && source "$dir/.shell/.zprofile"
 done

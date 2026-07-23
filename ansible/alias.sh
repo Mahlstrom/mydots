@@ -1,2 +1,0 @@
-alias ap="ansible-playbook"
-alias a="ansible"
